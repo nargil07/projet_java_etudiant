@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import mini_projet.DAO.EtudiantDAO;
+import mini_projet.Entity.Etudiant;
 import org.xml.sax.SAXException;
 
 /**
@@ -23,19 +24,10 @@ public class Mini_projet {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            EtudiantDAO etudiantDAO = new EtudiantDAO("list_etudiant.xml");
-            etudiantDAO.addEtudiant("jojo", "bernard", "3");
-            etudiantDAO.save();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(Mini_projet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(Mini_projet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Mini_projet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TransformerException ex) {
-            Logger.getLogger(Mini_projet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        EtudiantDAO etudiantDAO = new EtudiantDAO("list_etudiant.xml");
+        etudiantDAO.addEtudiant("GUEFFIER", "Athénaïs", "3");
+        etudiantDAO.addEtudiant("TIS", "Fakri", "7");
+
     }
-    
 }
