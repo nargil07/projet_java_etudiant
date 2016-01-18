@@ -19,6 +19,7 @@ public class MDXInterpreter extends DefaultHandler {
                 MDXInterpreter.html = ""
                         + "<html>"
                         + "<head>"
+                        + "<meta charset='utf-8'>"
                         + "</head>"
                         + "<body>";
                 break;
