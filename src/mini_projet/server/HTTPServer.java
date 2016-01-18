@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import mini_projet.server.HTTPServerThread;
 
 
 public class HTTPServer 
