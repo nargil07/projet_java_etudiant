@@ -13,22 +13,26 @@ public class SAXParser {
 	private XMLReader parser;
 	private MDXInterpreter interpreter;
 	
-	public SAXParser(File file) {
+	public SAXParser(String identifiant) {
 		this.parser = null;
-		try {
+		this.interpreter = new MDXInterpreter(identifiant);
+	}
+        
+        public void parse(File file){
+            try {
 			parser = XMLReaderFactory.createXMLReader();
 		} catch (SAXException e) {
 			System.out.println(e);
 		}
 		try {
 			InputSource is = new InputSource(new FileInputStream(file));
-			this.interpreter = new MDXInterpreter();
+			
 			parser.setContentHandler(interpreter);
 			parser.parse(is);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-	}
+        }
 
 	public MDXInterpreter getInterpreter() {
 		return interpreter;

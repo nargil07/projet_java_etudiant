@@ -22,6 +22,7 @@ public class HTTPServerThread extends Thread {
 
     public void run() {
         try {
+            File f = null;
             InputStream is = this.s.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is,
                     "US-ASCII"));
@@ -29,17 +30,25 @@ public class HTTPServerThread extends Thread {
             if ((rq != null) && (rq.startsWith("GET "))) {
                 rq = rq.substring(5, rq.indexOf("HTTP"));
 
-                switch (rq) {
+                switch (rq.split("\\?")[0]) {
                     case " ": //caractere quand on met pas index.html
                     case "index.html":
-                        File f = new File("index.mdx");
+                       f = new File("index.mdx ");
                         if (f.isFile()) {
-                            SAXParser parser = new SAXParser(f);
+                            SAXParser parser = new SAXParser(null);
+                            parser.parse(f);
                             this.s.getOutputStream().write(MDXInterpreter.getHtml().getBytes());
                         }
                         break;
                     case "detail.html":
-                        System.out.println("detail");
+                        String id = rq.split("\\?")[1].split("=")[1];
+                        id = id.substring(0,id.length()-1);
+                        f = new File("detail.mdx");
+                        if (f.isFile()) {
+                            SAXParser parser = new SAXParser(id);
+                            parser.parse(f);
+                            this.s.getOutputStream().write(MDXInterpreter.getHtml().getBytes());
+                        }
                         break;
 
                     default:

@@ -10,10 +10,18 @@ import org.xml.sax.helpers.DefaultHandler;
 public class MDXInterpreter extends DefaultHandler {
 
     public static String html;
+    public String identifiant = null;
+
+    public MDXInterpreter(String identifiant) {
+        this.identifiant = identifiant;
+    }
+    
+    
 
     @Override
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
+        EtudiantDAO dao;
         switch (localName) {
             case "sheet":
                 MDXInterpreter.html = ""
@@ -33,16 +41,24 @@ public class MDXInterpreter extends DefaultHandler {
                 MDXInterpreter.html += "</tr>";
                 MDXInterpreter.html += "</thead>";
                 MDXInterpreter.html += "<tbody>";
-                EtudiantDAO dao = new EtudiantDAO(attributes.getValue("src"));
+                dao = new EtudiantDAO(attributes.getValue("src"));
                 List<Etudiant> list = dao.getListEtudiants();
                 for(Etudiant etudiant : list){
                     MDXInterpreter.html += "<tr>";
-                    MDXInterpreter.html += "<td>"+etudiant.getNom()+"</td>";
-                    MDXInterpreter.html += "<td>"+etudiant.getPrenom()+"</td>";
-                    MDXInterpreter.html += "<td>"+etudiant.getGroupe()+"</td>";
+                    MDXInterpreter.html += "<td><a href='detail.html?id="+etudiant.getIdentifiant()+"'>"+etudiant.getNom()+"</a></td>";
+                    MDXInterpreter.html += "<td><a href='detail.html?id="+etudiant.getIdentifiant()+"'>"+etudiant.getPrenom()+"</a></td>";
+                    MDXInterpreter.html += "<td><a href='detail.html?id="+etudiant.getIdentifiant()+"'>"+etudiant.getGroupe()+"</a></td>";
                     MDXInterpreter.html += "</tr>";
                 }
                MDXInterpreter.html += "</tbody>";
+                break;
+            case "card":
+                MDXInterpreter.html += "<div>";
+                dao = new EtudiantDAO(attributes.getValue("src"));
+                Etudiant etudiant = dao.getEtudiant(identifiant);
+                MDXInterpreter.html += "<p>"+etudiant.getNom()+"</p>";
+                MDXInterpreter.html += "<p>"+etudiant.getPrenom()+"</p>";
+                MDXInterpreter.html += "<p>"+etudiant.getGroupe()+"</p>";
                 break;
         }
     }
@@ -56,9 +72,20 @@ public class MDXInterpreter extends DefaultHandler {
             case "datatable":
                 MDXInterpreter.html += "</table>";
                 break;
+            case "card":
+                MDXInterpreter.html += "</div>";
+                break;
         }
     }
 
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
+    
     public static String getHtml() {
         return new String(html);
     }
