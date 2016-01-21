@@ -34,18 +34,31 @@ public class HTTPServerThread extends Thread {
             if ((rq != null) && (rq.startsWith("GET "))) {
                 rq = rq.substring(5, rq.indexOf("HTTP"));
                 String url = rq.split("\\?")[0];
-                if(rq.split("\\?").length > 1){
+                if (rq.split("\\?").length > 1) {
                     attributes = rq.split("\\?")[1].split("\\&");
-                }else{
+                } else {
                     attributes = new String[0];
                 }
                 switch (url) {
                     case "": //caractere quand on met pas index.html
                     case " ": //caractere quand on met pas index.html
                     case "index.html":
-                        if(attributes.length > 0){
-                            String id = attributes[0].split("=")[1];
-                            etudiantDAO.removeEtudiant(etudiantDAO.getEtudiant(id));
+                        switch (attributes.length) {
+                            case 2:
+                                String action = attributes[1].split("=")[1];
+                                if (action == "supprimer") {
+                                    String id = attributes[0].split("=")[1];
+                                    etudiantDAO.removeEtudiant(etudiantDAO.getEtudiant(id));
+                                } else {
+                                    String query = attributes[0].split("=")[1];
+                                    // TODO : appelle à la fonction de recherche
+                                }
+                                break;
+                            case 4:
+                                String nom = attributes[0].split("=")[1];
+                                String prenom = attributes[1].split("=")[1];
+                                String groupe = attributes[2].split("=")[1];
+                                etudiantDAO.addEtudiant(nom, prenom, groupe);
                         }
                         f = new File("index.mdx ");
                         if (f.isFile()) {
@@ -55,7 +68,7 @@ public class HTTPServerThread extends Thread {
                         }
                         break;
                     case "detail.html":
-                        
+
                         switch (attributes.length) {
                             case 1:
                                 String id = attributes[0].split("=")[1];
