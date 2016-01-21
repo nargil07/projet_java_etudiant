@@ -38,6 +38,7 @@ public class MDXInterpreter extends DefaultHandler {
                 MDXInterpreter.html += "<th>prenom</th>";
                 MDXInterpreter.html += "<th>nom</th>";
                 MDXInterpreter.html += "<th>groupe</th>";
+                MDXInterpreter.html += "<th></th>";
                 MDXInterpreter.html += "</tr>";
                 MDXInterpreter.html += "</thead>";
                 MDXInterpreter.html += "<tbody>";
@@ -45,20 +46,29 @@ public class MDXInterpreter extends DefaultHandler {
                 List<Etudiant> list = dao.getListEtudiants();
                 for(Etudiant etudiant : list){
                     MDXInterpreter.html += "<tr>";
+                    MDXInterpreter.html += "<form>";
                     MDXInterpreter.html += "<td><a href='detail.html?id="+etudiant.getIdentifiant()+"'>"+etudiant.getNom()+"</a></td>";
                     MDXInterpreter.html += "<td><a href='detail.html?id="+etudiant.getIdentifiant()+"'>"+etudiant.getPrenom()+"</a></td>";
                     MDXInterpreter.html += "<td><a href='detail.html?id="+etudiant.getIdentifiant()+"'>"+etudiant.getGroupe()+"</a></td>";
+                    MDXInterpreter.html += "<td>";
+                    MDXInterpreter.html += "<input type=\"hidden\" name=\"identifiant\" value=\""+etudiant.getIdentifiant()+"\"/>";
+                    MDXInterpreter.html += "<input type=\"submit\" name=\"action\" value=\"supprimer\""+etudiant.getIdentifiant()+"/>";
+                    MDXInterpreter.html += "</td>";
+                    MDXInterpreter.html += "</form>";
                     MDXInterpreter.html += "</tr>";
                 }
-               MDXInterpreter.html += "</tbody>";
+               
                 break;
             case "card":
                 MDXInterpreter.html += "<div>";
+                MDXInterpreter.html += "<form action=\"detail.html\">";
                 dao = new EtudiantDAO(attributes.getValue("src"));
                 Etudiant etudiant = dao.getEtudiant(identifiant);
-                MDXInterpreter.html += "<p>"+etudiant.getNom()+"</p>";
-                MDXInterpreter.html += "<p>"+etudiant.getPrenom()+"</p>";
-                MDXInterpreter.html += "<p>"+etudiant.getGroupe()+"</p>";
+                MDXInterpreter.html += "<p><input type=\"hidden\" name=\"identifiant\" value=\"" + etudiant.getIdentifiant()+"\"/></p>";
+                MDXInterpreter.html += "<p><input type=\"text\" name=\"nom\" value=\"" + etudiant.getNom() +"\"/></p>";
+                MDXInterpreter.html += "<p><input type=\"text\" name=\"prenom\" value=\""+etudiant.getPrenom()+"\"/></p>";
+                MDXInterpreter.html += "<p><input type=\"text\" name=\"groupe\" value=\""+etudiant.getGroupe()+"\"/></p>";
+                MDXInterpreter.html += "<p><input type=\"submit\" name=\"action\" value=\"modifierEtudiant\" ></input></p>";
                 break;
         }
     }
@@ -70,9 +80,11 @@ public class MDXInterpreter extends DefaultHandler {
                 MDXInterpreter.html += "</body>";
                 break;
             case "datatable":
+                MDXInterpreter.html += "</tbody>";
                 MDXInterpreter.html += "</table>";
                 break;
             case "card":
+                MDXInterpreter.html += "</form>";
                 MDXInterpreter.html += "</div>";
                 break;
         }
