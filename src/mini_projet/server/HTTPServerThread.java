@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 import mini_projet.DAO.EtudiantDAO;
 import mini_projet.Entity.Etudiant;
 import mini_projet.sax.MDXInterpreter;
@@ -39,6 +42,7 @@ public class HTTPServerThread extends Thread {
                 } else {
                     attributes = new String[0];
                 }
+                List<Etudiant> list_etudiant = new ArrayList<>();
                 switch (url) {
                     case "": //caractere quand on met pas index.html
                     case " ": //caractere quand on met pas index.html
@@ -46,12 +50,18 @@ public class HTTPServerThread extends Thread {
                         switch (attributes.length) {
                             case 2:
                                 String action = attributes[1].split("=")[1];
-                                if (action == "supprimer") {
+                                action = action.substring(0, action.length() - 1);
+                                if (action.equals("supprimer")) {
                                     String id = attributes[0].split("=")[1];
                                     etudiantDAO.removeEtudiant(etudiantDAO.getEtudiant(id));
+                                    list_etudiant = etudiantDAO.getListEtudiants();
                                 } else {
-                                    String query = attributes[0].split("=")[1];
-                                    // TODO : appelle à la fonction de recherche
+                                    if (attributes[0].split("=").length > 1) {
+                                        String query = attributes[0].split("=")[1];
+                                        list_etudiant = etudiantDAO.recherche(query);
+                                    }else{
+                                        list_etudiant = etudiantDAO.getListEtudiants();
+                                    }
                                 }
                                 break;
                             case 4:
@@ -59,10 +69,16 @@ public class HTTPServerThread extends Thread {
                                 String prenom = attributes[1].split("=")[1];
                                 String groupe = attributes[2].split("=")[1];
                                 etudiantDAO.addEtudiant(nom, prenom, groupe);
+                                list_etudiant = etudiantDAO.getListEtudiants();
+                                break;
+                            default:
+                                list_etudiant = etudiantDAO.getListEtudiants();
+                                break;
                         }
                         f = new File("index.mdx ");
                         if (f.isFile()) {
-                            SAXParser parser = new SAXParser(null);
+
+                            SAXParser parser = new SAXParser(list_etudiant);
                             parser.parse(f);
                             this.s.getOutputStream().write(MDXInterpreter.getHtml().getBytes());
                         }
@@ -75,7 +91,9 @@ public class HTTPServerThread extends Thread {
                                 id = id.substring(0, id.length() - 1);
                                 f = new File("detail.mdx");
                                 if (f.isFile()) {
-                                    SAXParser parser = new SAXParser(id);
+                                    list_etudiant = new ArrayList<>();
+                                    list_etudiant.add(etudiantDAO.getEtudiant(id));
+                                    SAXParser parser = new SAXParser(list_etudiant);
                                     parser.parse(f);
                                     this.s.getOutputStream().write(MDXInterpreter.getHtml().getBytes());
                                 }
@@ -92,7 +110,9 @@ public class HTTPServerThread extends Thread {
                                 etudiantDAO.updateEtudiant(etudiant);
                                 f = new File("detail.mdx");
                                 if (f.isFile()) {
-                                    SAXParser parser = new SAXParser(identifiant);
+                                    list_etudiant = new ArrayList<>();
+                                    list_etudiant.add(etudiantDAO.getEtudiant(identifiant));
+                                    SAXParser parser = new SAXParser(list_etudiant);
                                     parser.parse(f);
                                     this.s.getOutputStream().write(MDXInterpreter.getHtml().getBytes());
                                 }

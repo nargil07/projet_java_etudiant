@@ -107,6 +107,18 @@ public class EtudiantDAO {
     public Etudiant getEtudiant(String identifiant){
         return listEtudiants.get(identifiant);
     }
+    
+    public List<Etudiant> recherche(String research){
+        List<Etudiant> etudiants = new ArrayList<>();
+        for (Map.Entry<String, Etudiant> entrySet : listEtudiants.entrySet()) {
+            String key = entrySet.getKey();
+            Etudiant value = entrySet.getValue();
+            if(value.getNom().toLowerCase().contains(research.toLowerCase()) || value.getPrenom().toLowerCase().contains(research.toLowerCase()) || value.getGroupe().toLowerCase().contains(research.toLowerCase())){
+                etudiants.add(value);
+            }
+        }
+        return etudiants;
+    }
 
     public void addEtudiant(String nom, String prenom, String groupe){
         Etudiant etudiant = new Etudiant();

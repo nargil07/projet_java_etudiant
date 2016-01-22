@@ -2,6 +2,8 @@ package mini_projet.sax;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
+import mini_projet.Entity.Etudiant;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -13,9 +15,9 @@ public class SAXParser {
 	private XMLReader parser;
 	private MDXInterpreter interpreter;
 	
-	public SAXParser(String identifiant) {
+	public SAXParser(List<Etudiant> list_etudiant) {
 		this.parser = null;
-		this.interpreter = new MDXInterpreter(identifiant);
+		this.interpreter = new MDXInterpreter(list_etudiant);
 	}
         
         public void parse(File file){
