@@ -60,9 +60,9 @@ public class MDXInterpreter extends DefaultHandler {
                     MDXInterpreter.html += "</tr>";
                 }
                MDXInterpreter.html += "<form>"
-                       + "<input type=\"text\" name=\"nom\" placeholder=\"nom\">"
-                       + "<input type=\"text\" name=\"prenom\" placeholder=\"prenom\">"
-                       + "<input type=\"text\" name=\"groupe\" placeholder=\"groupe\">"
+                       + "<input type=\"text\" name=\"nom\" placeholder=\"nom\" required>"
+                       + "<input type=\"text\" name=\"prenom\" placeholder=\"prenom\" required>"
+                       + "<input type=\"text\" name=\"groupe\" placeholder=\"groupe\" required>"
                        + "<input type=\"submit\" name=\"action\" value=\"ajouter\"/>"
                        + "</form>";
                 break;
